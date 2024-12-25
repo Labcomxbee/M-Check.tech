@@ -1,7 +1,7 @@
 {
     "name": "M-Check : ระบบเช็คอิน",
     "short_name": "M-Check",
-    "start_url": "/index.html",
+    "start_url": "/https://labcomxbee.github.io/M-Check.tech/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#6200ea",
