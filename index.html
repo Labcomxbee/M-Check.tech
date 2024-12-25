@@ -141,15 +141,39 @@
   margin-top: 0px;
   padding: 0px;
 }
+
+   /* From Uiverse.io by biswacpcode */ 
+.install {
+  color: white;
+  text-decoration: none;
+  font-size: 25px;
+  border: none;
+  background: none;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.install::before {
+  margin-left: auto;
+}
+
+.install::after, .install::before {
+  content: '';
+  width: 0%;
+  height: 2px;
+  background: #f44336;
+  display: block;
+  transition: 0.5s;
+}
+
+.install:hover::after, .install:hover::before {
+  width: 100%;
+}
   
   </style>
 </head>
 <body>
-   <button class="install" id="install-button">
-     
-     
-
-     ติดตั้งแอป</button>
+   <button class="install" id="install-button">ติดตั้งแอป</button>
 
 
 
