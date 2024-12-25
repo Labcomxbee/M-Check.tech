@@ -11,8 +11,10 @@ const urlsToCache = [
 
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
+    caches.open("mcheck-cache-v1").then(cache => {
+      return cache.addAll(urlsToCache).catch(error => {
+        console.error("Failed to cache files:", error);
+      });
     })
   );
 });
@@ -39,3 +41,5 @@ self.addEventListener("activate", event => {
     )
   );
 });
+
+
