@@ -1,11 +1,11 @@
 const CACHE_NAME = "mcheck-cache-v1";
 const urlsToCache = [
-  "./index.html",
-  "./page1.html",
-  "./page2.html",
-  "./.document_5591641.png",
-  "./service-worker.js",
-  "./manifest.json",
+  "/cccc1/index.html",
+  "/cccc1/page1.html",
+  "/cccc1/page2.html",
+  "/cccc1/document_5591641.png",
+  "/cccc1/service-worker.js",
+  "/cccc1/manifest.json",
  
 ];
 
