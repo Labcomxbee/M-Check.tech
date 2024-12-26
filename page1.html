@@ -542,11 +542,16 @@
         <h3>ภาพถ่ายของคุณ</h3>
        
 
-        <button class="btnmap"  onclick="openCamera()">
-          กดเพื่อถ่ายภาพ
-          <div class="hoverEffect">
-            <div class="mbtneff"></div>
-          </div>
+        <button class="btnmap" onclick="openCamera()">เปิดกล้อง
+            <div class="hoverEffect">
+                <div class="mbtneff"></div>
+              </div>
+        </button>
+
+        <button class="btnmap" onclick="captureImage()">จับภาพ
+            <div class="hoverEffect">
+                <div class="mbtneff"></div>
+              </div>
         </button>
 
         <div class="image-preview" id="imagePreview">
@@ -554,13 +559,15 @@
         </div>
     </div>
 
+
     <!-- Submit Button -->
     <button class="btn submit-btn Btn" onclick="submitData()">Check in</button>
 
     <script>
-        let currentLat = null;  // เปลี่ยนตัวแปรเป็น `currentLat` แทน `userLat`
+let currentLat = null;  // เปลี่ยนตัวแปรเป็น `currentLat` แทน `userLat`
 let currentLon = null;  // เปลี่ยนตัวแปรเป็น `currentLon` แทน `userLong`
 let base64Image = null;  // ตัวแปร base64Image ที่ใช้สำหรับเก็บรูปภาพ
+       
 
 // Get current location
 function getLocation() {
@@ -583,43 +590,63 @@ function getLocation() {
     }
 }
 
-// Open camera
+let videoStream = null;  // เก็บข้อมูล stream ของกล้อง
+
+// ฟังก์ชันเปิดกล้อง
 function openCamera() {
     navigator.mediaDevices.getUserMedia({ video: true })
     .then(function(stream) {
+        videoStream = stream;  // เก็บ stream ของกล้อง
         const video = document.createElement('video');
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-
         video.srcObject = stream;
         video.play();
 
+        // เพิ่ม video element ลงใน HTML
+        const videoContainer = document.getElementById('imagePreview');
+        videoContainer.innerHTML = '';  // เคลียร์เนื้อหาก่อน
+        videoContainer.appendChild(video);
+
         video.addEventListener('loadeddata', function() {
-            setTimeout(function() {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                // เลือกฟอร์แมตที่ต้องการ
-                const imageFormat = 'image/jpeg';
-                base64Image = canvas.toDataURL(imageFormat, 1.0);  // เก็บข้อมูล base64 ของภาพ
-
-                const img = document.createElement('img');
-                img.src = base64Image;
-                img.style.maxWidth = '100%';
-                img.style.borderRadius = '10px';
-
-                document.getElementById('imagePreview').innerHTML = '';
-                document.getElementById('imagePreview').appendChild(img);
-
-                stream.getTracks().forEach(track => track.stop());
-            }, 1000);
+            // ทำให้ผู้ใช้สามารถแพลนกล้องได้ทันที
+            video.style.maxWidth = '100%';
+            video.style.borderRadius = '10px';
         });
     })
     .catch(function(error) {
-        alert("Error accessing camera: " + error.message);
+        console.error("เกิดข้อผิดพลาดในการเข้าถึงกล้อง: ", error);
     });
 }
+
+// ฟังก์ชันจับภาพ
+// จับภาพ
+function captureImage() {
+    if (videoStream) {
+        const video = document.querySelector('video');  
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        base64Image = canvas.toDataURL('image/jpeg', 1.0);  
+
+        const img = document.createElement('img');
+        img.src = base64Image;
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '10px';
+
+        const videoContainer = document.getElementById('imagePreview');
+        videoContainer.innerHTML = '';  
+        videoContainer.appendChild(img);
+
+        videoStream.getTracks().forEach(track => track.stop());
+        videoStream = null; 
+    } else {
+        showMessage("กรุณาเปิดกล้องก่อนทำการจับภาพ!", false);
+    }
+}
+
 
 function submitData() {
   const userName = document.getElementById('userName').value;
